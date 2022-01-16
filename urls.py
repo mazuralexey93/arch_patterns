@@ -9,7 +9,7 @@ def date_front(request):
 
 
 def hello_front(request):
-    request['hello'] = 'hello'
+    request['hello'] = 'hello from custom middleware'
 
 
 fronts = [date_front, hello_front]
