@@ -1,0 +1,10 @@
+.idea/
+Lib
+Scripts
+env/
+venv/
+
+*.log
+*.pot
+*.pyc
+__pycache__/
