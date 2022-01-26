@@ -8,8 +8,8 @@ class GetRequests:
         if data:
             params = data.split('&')
             for item in params:
-                k, v = item.split('=')
-                result[k] = v
+                key, value = item.split('=')
+                result[key] = value
         return result
 
     @staticmethod
@@ -28,8 +28,8 @@ class PostRequests:
         if data:
             params = data.split('&')
             for item in params:
-                k, v = item.split('=')
-                result[k] = v
+                key, value = item.split('=')
+                result[key] = value
         return result
 
     @staticmethod
