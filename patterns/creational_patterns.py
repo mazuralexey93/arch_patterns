@@ -111,8 +111,8 @@ class Engine:
     @staticmethod
     def decode_value(val):
         bytes_value = bytes(val.replace('%', '=').replace("+", " "), 'UTF-8')
-        decode_value = decodestring(bytes_value)
-        return decode_value.decode('UTF-8')
+        str_decode_value = decodestring(bytes_value)
+        return str_decode_value.decode('UTF-8')
 
 
 #  Singleton
