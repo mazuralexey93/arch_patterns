@@ -1,6 +1,6 @@
 from quopri import decodestring
 
-from arch_patterns.my_framework.requests import PostRequests, GetRequests
+from requests import PostRequests, GetRequests
 
 
 class PageNotFound404:
