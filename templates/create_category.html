@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}
+    Создание новой категории
+{% endblock %}
+{% block style %}
+    {% include "inc-style.html" %}
+{% endblock %}
+{% block menu %}
+    {% include "inc-menu.html" %}
+{% endblock %}
+{% block content %}
+
+    <h1>Создание категории</h1>
+    <form method="post">
+        <input type="text" name="name" placeholder="Название">
+        <button type="submit">Сохранить и вернуться на главную</button>
+    </form>
+    {% include "inc-index-body.html" %}
+{% endblock %}

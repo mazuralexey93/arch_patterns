@@ -20,6 +20,11 @@ class AnotherPage:
         return '200 OK', render('another_page.html')
 
 
+class BulletinBoard:
+    def __call__(self, request):
+        return '200 OK', render('board.html')
+
+
 class NotFound404:
     def __call__(self, request):
         return '404 WHAT', '404 PAGE Not Found'
@@ -32,8 +37,9 @@ class GoodsList:
             category = site.find_category_by_id(
                 int(request['request_params']['id']))
             return '200 OK', render('goods_list.html',
-                                    objects_list=category.courses,
-                                    name=category.name, id=category.id)
+                                    objects_list=category.goods,
+                                    name=category.name,
+                                    id=category.id)
         except KeyError:
             return '200 OK', 'No goods have been added yet'
 
@@ -50,7 +56,7 @@ class CreateGood:
 
             if self.category_id != -1:
                 category = site.find_category_by_id(int(self.category_id))
-                good = site.create_good('record', name, category)
+                good = site.create_good('car', name, category)
                 site.goods.append(good)
 
             return '200 OK', render('goods_list.html',
@@ -65,7 +71,7 @@ class CreateGood:
                                         name=category.name,
                                         id=category.id)
             except KeyError:
-                return '200 OK', 'No goods have been added yet'
+                return '200 OK', 'No categories have been added yet'
 
 
 class CreateCategory:

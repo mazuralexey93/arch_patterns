@@ -23,8 +23,8 @@ class UserFactory:
     }
 
     @classmethod
-    def create(cls, _type):
-        return cls.types[_type]()
+    def create(cls, type_):
+        return cls.types[type_]()
 
 
 #  Prototype
@@ -37,7 +37,7 @@ class Good(GoodPrototype):
     def __init__(self, name, category):
         self.name = name
         self.category = category
-        self.category.list_categories.append(self)
+        self.category.goods.append(self)
 
 
 class Car(Good):
@@ -55,8 +55,8 @@ class GoodFactory:
     }
 
     @classmethod
-    def create(cls, _type, name, category):
-        return cls.types[_type](name, category)
+    def create(cls, type_, name, category):
+        return cls.types[type_](name, category)
 
 
 class Category:
@@ -67,12 +67,12 @@ class Category:
         Category.auto_id += 1
         self.name = name
         self.category = category
-        self.list_categories = []
+        self.goods = []
 
-    def cat_count(self):
-        result = len(self.list_categories)
+    def good_count(self):
+        result = len(self.goods)
         if self.category:
-            result += self.category.cat_count()
+            result += self.category.good_count()
         return result
 
 
@@ -84,8 +84,8 @@ class Engine:
         self.categories = []
 
     @staticmethod
-    def create_user(_type):
-        return UserFactory.create(_type)
+    def create_user(type_):
+        return UserFactory.create(type_)
 
     @staticmethod
     def create_category(name, category=None):
@@ -99,8 +99,8 @@ class Engine:
         raise Exception(f'Нет категории с id = {id}')
 
     @staticmethod
-    def create_good(_type, name, category):
-        return GoodFactory.create(_type, name, category)
+    def create_good(type_, name, category):
+        return GoodFactory.create(type_, name, category)
 
     def get_good(self, name):
         for item in self.goods:

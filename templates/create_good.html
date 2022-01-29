@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}
+   Создание нового товара
+{% endblock %}
+{% block style %}
+	{% include "inc-style.html" %}
+{% endblock %}
+{% block menu %}
+    {% include "inc-menu.html" %}
+{% endblock %}
+{% block content %}
+    <div>
+         <a href="/goods-list/?id={{id}}">К списку товаров</a>
+    </div>
+
+    <br>
+    <br>
+
+    <div>
+        <h1>Создать товар для категории "{{name}}"</h1>
+        <form method="post">
+            <input type="text" name="name" placeholder="Название">
+            <button type="submit">Сохранить и вернуться к списку товаров</button>
+        </form>
+    </div>
+    {% include "inc-index-body.html" %}
+{% endblock %}
