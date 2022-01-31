@@ -3,11 +3,21 @@
     Index page
 {% endblock %}
 {% block style %}
-	{% include "inc-style.html" %}
+    {% include "inc-style.html" %}
 {% endblock %}
 {% block menu %}
     {% include "inc-menu.html" %}
 {% endblock %}
 {% block content %}
+    <a href="/create-category/">Создать новую категорию</a>
+    <ul>
+        {% for item in objects_list %}
+            <li>
+                {{ item.name }} <span>Количество товаров: {{ item.good_count() }}</span>
+                <a href="/goods-list/?id={{ item.id }}">Показать товары</a>
+            </li>
+        {% endfor %}
+    </ul>
+
     {% include "inc-index-body.html" %}
 {% endblock %}

@@ -1,6 +1,6 @@
 from quopri import decodestring
 
-from arch_patterns.my_framework.requests import PostRequests, GetRequests
+from .requests import PostRequests, GetRequests
 
 
 class PageNotFound404:
@@ -18,11 +18,10 @@ class Framework:
 
         if not path.endswith('/'):
             path = f'{path}/'
-        request = {}
 
+        request = {}
         method = environ['REQUEST_METHOD']
         request['method'] = method
-        print('method', method)  # method GET
 
         if method == 'POST':
             data = PostRequests().get_request_params(environ)
