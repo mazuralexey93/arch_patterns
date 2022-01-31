@@ -1,4 +1,4 @@
-from patterns.creational_patterns import Engine, Logger
+from patterns.creational_patterns import Engine, Logger, Category
 from my_framework.templator import render
 
 site = Engine()
@@ -74,6 +74,27 @@ class CreateGood:
                 return '200 OK', 'No categories have been added yet'
 
 
+class CopyGood:
+    def __call__(self, request):
+        request_params = request['request_params']
+        new_good = ''
+
+        try:
+            name = request_params['name']
+            existing_good = site.get_good(name)
+            if existing_good:
+                new_name = f'copy_{name}'
+                new_good = existing_good.clone()
+                new_good.name = new_name
+                site.goods.append(new_good)
+            return '200 OK', render('goods_list.html',
+                                    objects_list=site.goods,
+                                    name=new_good.category.name)
+
+        except KeyError:
+            return '200 OK', 'No goods have been added yet'
+
+
 class CreateCategory:
     def __call__(self, request):
         if request['method'] == 'POST':
@@ -101,21 +122,3 @@ class CategoryList:
         return '200 OK', render('category_list.html', objects_list=site.categories)
 
 
-class CopyGood:
-    def __call__(self, request):
-        request_params = request['request_params']
-        # new_good = ''
-
-        try:
-            name = request_params['name']
-            existing_good = site.get_good(name)
-            if existing_good:
-                new_name = f'copy_{name}'
-                new_good = existing_good.clone()
-                new_good.name = new_name
-                site.goods.append(new_good)
-            return '200 OK', render('goods_list.html',
-                                    objects_list=site.goods,
-                                    name=new_good.category.name)
-        except KeyError:
-            return '200 OK', 'No goods have been added yet'
