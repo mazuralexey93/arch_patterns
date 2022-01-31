@@ -17,14 +17,14 @@ def hello_front(request):
 fronts = [date_front, hello_front]
 
 # urls
-routes = {
-    '/': Index(),
-    '/another_page/': AnotherPage(),
-    '/contact/': Contact(),
-    '/board/': BulletinBoard(),
-    '/goods-list/': GoodsList(),
-    '/create-good/': CreateGood(),
-    '/category-list/': CategoryList(),
-    '/create-category/': CreateCategory(),
-    '/copy-good/': CopyGood()
-}
+# routes = {
+#     '/': Index(),
+#     '/another_page/': AnotherPage(),
+#     '/contact/': Contact(),
+#     '/board/': BulletinBoard(),
+#     '/goods-list/': GoodsList(),
+#     '/create-good/': CreateGood(),
+#     '/category-list/': CategoryList(),
+#     '/create-category/': CreateCategory(),
+#     '/copy-good/': CopyGood()
+# }
