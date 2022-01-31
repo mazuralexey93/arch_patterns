@@ -1,13 +1,13 @@
 from quopri import decodestring
-
 from .requests import PostRequests, GetRequests
 
 
 class PageNotFound404:
     def __call__(self, request):
-        return '404', '404 PAGE Not Found'
+        return '404 WHAT', '404 PAGE Not Found'
 
 
+# Facade pattern
 class Framework:
     def __init__(self, routes, fronts):
         self.routes = routes

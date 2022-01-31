@@ -75,7 +75,7 @@ class Category:
             result += self.category.good_count()
         return result
 
-
+# Facade pattern
 class Engine:
     def __init__(self):
         self.sellers = []
