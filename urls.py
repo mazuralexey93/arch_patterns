@@ -1,5 +1,7 @@
 from datetime import date
 
+from views import BulletinBoard
+
 
 # front controller(middlewares)
 def date_front(request):
@@ -11,3 +13,7 @@ def hello_front(request):
 
 
 fronts = [date_front, hello_front]
+
+old_routes = {
+    '/board/': BulletinBoard()
+}

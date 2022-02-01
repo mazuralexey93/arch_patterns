@@ -29,7 +29,7 @@ class AnotherPage:
         return '200 OK', render('another_page.html')
 
 
-@AppRoute(routes=routes, url='/board/')
+# @AppRoute(routes=routes, url='/board/')
 class BulletinBoard:
     def __call__(self, request):
         return '200 OK', render('board.html')
