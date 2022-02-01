@@ -1,35 +1,47 @@
 from patterns.creational_patterns import Engine, Logger
+from patterns.structural_patterns import AppRoute, Debug
 from my_framework.templator import render
 
 site = Engine()
 logger = Logger('main')
 
+routes = {}
 
+
+@AppRoute(routes=routes, url='/')
 class Index:
+    @Debug(name='Index')
     def __call__(self, request):
         return '200 OK', render('index.html', date=request.get('date', None), objects_list=site.categories)
 
 
+@AppRoute(routes=routes, url='/contact/')
 class Contact:
+    @Debug(name='Contact')
     def __call__(self, request):
         return '200 OK', render('contact.html', hello=request.get('hello', None))
 
 
+@AppRoute(routes=routes, url='/another_page/')
 class AnotherPage:
+    @Debug(name='AnotherPage')
     def __call__(self, request):
         return '200 OK', render('another_page.html')
 
 
+@AppRoute(routes=routes, url='/board/')
 class BulletinBoard:
     def __call__(self, request):
         return '200 OK', render('board.html')
 
 
 class NotFound404:
+    @Debug(name='NotFound404')
     def __call__(self, request):
         return '404 WHAT', '404 PAGE Not Found'
 
 
+@AppRoute(routes=routes, url='/goods-list/')
 class GoodsList:
     def __call__(self, request):
         logger.log('Список товаров')
@@ -44,6 +56,7 @@ class GoodsList:
             return '200 OK', 'No goods have been added yet'
 
 
+@AppRoute(routes=routes, url='/create-good/')
 class CreateGood:
     category_id = -1
 
@@ -74,7 +87,31 @@ class CreateGood:
                 return '200 OK', 'No categories have been added yet'
 
 
+@AppRoute(routes=routes, url='/copy-good/')
+class CopyGood:
+    def __call__(self, request):
+        request_params = request['request_params']
+        new_good = ''
+
+        try:
+            name = request_params['name']
+            existing_good = site.get_good(name)
+            if existing_good:
+                new_name = f'copy_{name}'
+                new_good = existing_good.clone()
+                new_good.name = new_name
+                site.goods.append(new_good)
+            return '200 OK', render('goods_list.html',
+                                    objects_list=site.goods,
+                                    name=new_good.category.name)
+
+        except KeyError:
+            return '200 OK', 'No goods have been added yet'
+
+
+@AppRoute(routes=routes, url='/create-category/')
 class CreateCategory:
+    @Debug(name='CreateCategory')
     def __call__(self, request):
         if request['method'] == 'POST':
             data = request['data']
@@ -95,27 +132,8 @@ class CreateCategory:
             return '200 OK', render('create_category.html', categories=categories)
 
 
+@AppRoute(routes=routes, url='/category-list/')
 class CategoryList:
     def __call__(self, request):
         logger.log('Список категорий')
         return '200 OK', render('category_list.html', objects_list=site.categories)
-
-
-class CopyGood:
-    def __call__(self, request):
-        request_params = request['request_params']
-        # new_good = ''
-
-        try:
-            name = request_params['name']
-            existing_good = site.get_good(name)
-            if existing_good:
-                new_name = f'copy_{name}'
-                new_good = existing_good.clone()
-                new_good.name = new_name
-                site.goods.append(new_good)
-            return '200 OK', render('goods_list.html',
-                                    objects_list=site.goods,
-                                    name=new_good.category.name)
-        except KeyError:
-            return '200 OK', 'No goods have been added yet'

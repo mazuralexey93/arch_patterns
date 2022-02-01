@@ -1,13 +1,13 @@
 from quopri import decodestring
-
 from .requests import PostRequests, GetRequests
 
 
 class PageNotFound404:
     def __call__(self, request):
-        return '404', '404 PAGE Not Found'
+        return '404 WHAT', '404 PAGE Not Found'
 
 
+# Facade pattern
 class Framework:
     def __init__(self, routes, fronts):
         self.routes = routes
@@ -53,3 +53,15 @@ class Framework:
             val_decode_str = decodestring(val).decode('UTF-8')
             new_data[key] = val_decode_str
         return new_data
+
+
+class DebugApplication(Framework):
+
+    def __init__(self, routes, fronts):
+        self.application = Framework(routes, fronts)
+        super().__init__(routes, fronts)
+
+    def __call__(self, env, start_response):
+        print('DEBUG MODE')
+        print(env)
+        return self.application(env, start_response)
