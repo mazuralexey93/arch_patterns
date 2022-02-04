@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}
+    Add buyer
+{% endblock %}
+{% block style %}
+    {% include "inc-style.html" %}
+{% endblock %}
+{% block menu %}
+    {% include "inc-menu.html" %}
+{% endblock %}
+{% block content %}
+    <div>
+        <li>
+            <a href="/buyers-list/">Список покупателей</a>
+        </li>
+        <li>
+            <a href="/create-buyer/">Создать покупателя</a>
+        </li>
+    </div>
+    <h1>Подписать покупателя на товар</h1>
+    <form method="post">
+        <select size="3" name="good_name">
+            {% for item in goods %}
+                <option value="{{ item.name }}">{{ item.name }}</option>
+            {% endfor %}
+        </select>
+        <select size="3" name="buyer_name">
+            {% for item in buyers %}
+                <option value="{{ item.name }}">{{ item.name }}</option>
+            {% endfor %}
+        </select>
+    <br>
+        <button type="submit">Создать подписку</button>
+    </form>
+
+    {% include "inc-index-body.html" %}
+{% endblock %}

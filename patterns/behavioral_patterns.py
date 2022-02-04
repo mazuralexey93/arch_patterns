@@ -2,8 +2,6 @@ from jsonpickle import dumps, loads
 from arch_patterns.my_framework.templator import render
 
 # Observer pattern
-
-
 class Observer:
 
     def update(self, subject):
@@ -23,13 +21,13 @@ class Subject:
 class SmsNotifier(Observer):
 
     def update(self, subject):
-        print('Sending message->', 'Новинка! Появился товар: ', subject.goods[-1].name)
+        print('Sending message->', 'Новинка! Появился товар: ', subject.buyers[-1].name)
 
 
 class EmailNotifier(Observer):
 
     def update(self, subject):
-        print(('Sending email->', 'Новинка! Появился товар: ', subject.goods[-1].name))
+        print(('Sending email->', 'Новинка! Появился товар: ', subject.buyers[-1].name))
 
 
 # Memento pattern / serialization
