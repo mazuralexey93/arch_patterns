@@ -1,5 +1,5 @@
 from jsonpickle import dumps, loads
-from arch_patterns.my_framework.templator import render
+from my_framework.templator import render
 
 # Observer pattern
 class Observer:
@@ -96,7 +96,7 @@ class CreateView(TemplateView):
         if request['method'] == 'POST':
             data = self.get_request_data(request)
             self.create_obj(data)
-
+            print(data)
             return self.render_template_with_context()
         else:
             return super().__call__(request)

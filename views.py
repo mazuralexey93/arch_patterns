@@ -162,13 +162,13 @@ class BuyerCreateView(CreateView):
 
 
 @AppRoute(routes=routes, url='/add-buyer/')
-class AddSBuyerByGoodCreateView(CreateView):
+class AddBuyerByGoodCreateView(CreateView):
     template_name = 'add_buyer.html'
 
     def get_context_data(self):
         context = super().get_context_data()
-        context['courses'] = site.goods
-        context['students'] = site.buyers
+        context['goods'] = site.goods
+        context['buyers'] = site.buyers
         return context
 
     def create_obj(self, data: dict):
