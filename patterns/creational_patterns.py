@@ -2,9 +2,12 @@ from copy import deepcopy
 from datetime import datetime
 from quopri import decodestring
 
+from .behavioral_patterns import FileWriter, Subject
+
 
 class User:
-    pass
+    def __init__(self, name):
+        self.name = name
 
 
 class Seller(User):
@@ -12,7 +15,9 @@ class Seller(User):
 
 
 class Buyer(User):
-    pass
+    def __init__(self, name):
+        self.goods = []
+        super().__init__(name)
 
 
 #  Fabric method
@@ -23,21 +28,31 @@ class UserFactory:
     }
 
     @classmethod
-    def create(cls, type_):
-        return cls.types[type_]()
+    def create(cls, type_, name):
+        return cls.types[type_](name)
 
 
-#  Prototype
+#  Prototype pattern
 class GoodPrototype:
     def clone(self):
         return deepcopy(self)
 
 
-class Good(GoodPrototype):
+class Good(GoodPrototype, Subject):
     def __init__(self, name, category):
         self.name = name
         self.category = category
         self.category.goods.append(self)
+        self.buyers = []
+        super().__init__()
+
+    def __getitem__(self, item):
+        return self.buyers[item]
+
+    def add_buyer(self, buyer: Buyer):
+        self.buyers.append(buyer)
+        buyer.goods.append(self)
+        self.notify()
 
 
 class Car(Good):
@@ -48,12 +63,14 @@ class Yacht(Good):
     pass
 
 
+# Abstract factory pattern
 class GoodFactory:
     types = {
         'car': Car,
         'yacht': Yacht
     }
 
+    #  Fabric method pattern
     @classmethod
     def create(cls, type_, name, category):
         return cls.types[type_](name, category)
@@ -75,6 +92,7 @@ class Category:
             result += self.category.good_count()
         return result
 
+
 # Facade pattern
 class Engine:
     def __init__(self):
@@ -84,8 +102,8 @@ class Engine:
         self.categories = []
 
     @staticmethod
-    def create_user(type_):
-        return UserFactory.create(type_)
+    def create_user(type_, name):
+        return UserFactory.create(type_, name)
 
     @staticmethod
     def create_category(name, category=None):
@@ -93,7 +111,6 @@ class Engine:
 
     def find_category_by_id(self, id):
         for item in self.categories:
-            # print('item', item.id)
             if item.id == id:
                 return item
         raise Exception(f'Нет категории с id = {id}')
@@ -107,6 +124,11 @@ class Engine:
             if item.name == name:
                 return item
         return None
+
+    def get_buyer(self, name) -> Buyer:
+        for item in self.buyers:
+            if item.name == name:
+                return item
 
     @staticmethod
     def decode_value(val):
@@ -137,9 +159,12 @@ class SingletonByName(type):
 
 class Logger(metaclass=SingletonByName):
 
-    def __init__(self, name):
+    def __init__(self, name, writer=FileWriter()):
         self.name = name
+        self.writer = writer
 
-    @staticmethod
-    def log(text):
+    def log(self, text):
+        date = datetime.now()
+        text = f'log---> {text}, {date}'
         print('logging', text, datetime.now())
+        self.writer.write(text)

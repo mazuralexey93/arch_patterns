@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}
+   Buyers list
+{% endblock %}
+{% block style %}
+	{% include "inc-style.html" %}
+{% endblock %}
+{% block menu %}
+    {% include "inc-menu.html" %}
+{% endblock %}
+{% block content %}
+    <div>
+		<li>
+			<a href="/create-buyer/">Создать покупателя</a>
+		</li>
+		<li>
+			<a href="/add-buyer/">Добавить покупателя к рассылке</a>
+		</li>
+	</div>
+    <h1>Список покупателей</h1>
+    <div>
+
+        {% for item in objects_list %}
+        <li>
+            {{item.name}}
+            {% for good in item.goods %}
+                {{good.name}}
+            {% endfor %}
+        </li>
+        {% endfor %}
+    </div>
+    {% include "inc-index-body.html" %}
+{% endblock %}

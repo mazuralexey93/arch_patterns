@@ -1,9 +1,12 @@
 from patterns.creational_patterns import Engine, Logger
 from patterns.structural_patterns import AppRoute, Debug
+from patterns.behavioral_patterns import EmailNotifier, SmsNotifier, ListView, CreateView, BaseSerializer
 from my_framework.templator import render
 
 site = Engine()
 logger = Logger('main')
+email_notifier = EmailNotifier()
+sms_notifier = SmsNotifier()
 
 routes = {}
 
@@ -29,7 +32,7 @@ class AnotherPage:
         return '200 OK', render('another_page.html')
 
 
-@AppRoute(routes=routes, url='/board/')
+# @AppRoute(routes=routes, url='/board/')
 class BulletinBoard:
     def __call__(self, request):
         return '200 OK', render('board.html')
@@ -70,6 +73,8 @@ class CreateGood:
             if self.category_id != -1:
                 category = site.find_category_by_id(int(self.category_id))
                 good = site.create_good('car', name, category)
+                good.observers.append(email_notifier)
+                good.observers.append(sms_notifier)
                 site.goods.append(good)
 
             return '200 OK', render('goods_list.html',
@@ -137,3 +142,47 @@ class CategoryList:
     def __call__(self, request):
         logger.log('Список категорий')
         return '200 OK', render('category_list.html', objects_list=site.categories)
+
+
+@AppRoute(routes=routes, url='/buyers-list/')
+class BuyerListView(ListView):
+    queryset = site.buyers
+    template_name = 'buyers_list.html'
+
+
+@AppRoute(routes=routes, url='/create-buyer/')
+class BuyerCreateView(CreateView):
+    template_name = 'create_buyer.html'
+
+    def create_obj(self, data: dict):
+        name = data['name']
+        name = site.decode_value(name)
+        new_obj = site.create_user('buyer', name)
+        site.buyers.append(new_obj)
+
+
+@AppRoute(routes=routes, url='/add-buyer/')
+class AddSBuyerByGoodCreateView(CreateView):
+    template_name = 'add_buyer.html'
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['courses'] = site.goods
+        context['students'] = site.buyers
+        return context
+
+    def create_obj(self, data: dict):
+        good_name = data['good_name']
+        good_name = site.decode_value(good_name)
+        good = site.get_good(good_name)
+        buyer_name = data['buyer_name']
+        buyer_name = site.decode_value(buyer_name)
+        buyer = site.get_buyer(buyer_name)
+        good.add_buyer(buyer)
+
+
+@AppRoute(routes=routes, url='/api/')
+class CourseApi:
+    @Debug(name='GoodsApi')
+    def __call__(self, request):
+        return '200 OK', BaseSerializer(site.goods).save()

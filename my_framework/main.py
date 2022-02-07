@@ -55,6 +55,7 @@ class Framework:
         return new_data
 
 
+# Debug WSGI-application
 class DebugApplication(Framework):
 
     def __init__(self, routes, fronts):
@@ -65,3 +66,15 @@ class DebugApplication(Framework):
         print('DEBUG MODE')
         print(env)
         return self.application(env, start_response)
+
+
+# Fake WSGI-application
+class FakeApplication(Framework):
+
+    def __init__(self, routes, fronts):
+        self.application = Framework(routes, fronts)
+        super().__init__(routes, fronts)
+
+    def __call__(self, env, start_response):
+        start_response('200 OK', [('Content-Type', 'text/html')])
+        return [b'Hello from Fake']

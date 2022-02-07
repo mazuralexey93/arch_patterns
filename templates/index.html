@@ -10,6 +10,7 @@
 {% endblock %}
 {% block content %}
     <a href="/create-category/">Создать новую категорию</a>
+    <h1>Список существующих категорий</h1>
     <ul>
         {% for item in objects_list %}
             <li>
@@ -18,6 +19,19 @@
             </li>
         {% endfor %}
     </ul>
-
+    <br>
+    <ul>
+    <div>
+		<li>
+			<a href="/buyers-list/">Список покупателей</a>
+		</li>
+		<li>
+			<a href="/create-buyer/">Создать покупателя</a>
+		</li>
+		<li>
+			<a href="/add-buyer/">Добавить подписку покупателя на товар</a>
+		</li>
+	</div>
+    </ul>
     {% include "inc-index-body.html" %}
 {% endblock %}
