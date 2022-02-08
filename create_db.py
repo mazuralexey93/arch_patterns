@@ -1,5 +1,6 @@
 import sqlite3
 
+# Create Database
 connection = sqlite3.connect('patterns.sqlite')
 cursor = connection.cursor()
 
