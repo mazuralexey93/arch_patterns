@@ -72,7 +72,7 @@ class CreateGood:
 
             if self.category_id != -1:
                 category = site.find_category_by_id(int(self.category_id))
-                good = site.create_good('car', name, category)
+                good = site.create_good('simple_good', name, category)
                 good.observers.append(email_notifier)
                 good.observers.append(sms_notifier)
                 site.goods.append(good)
