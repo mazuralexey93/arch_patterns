@@ -232,14 +232,12 @@ connection = connect('patterns.sqlite')
 class MapperRegistry:
     mappers = {
         'buyer': BuyerMapper,
-        #'category': CategoryMapper
+        #  'category': CategoryMapper
     }
 
     @staticmethod
     def get_mapper(obj):
-
         if isinstance(obj, Buyer):
-
             return BuyerMapper(connection)
 
     @staticmethod
