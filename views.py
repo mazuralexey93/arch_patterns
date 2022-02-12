@@ -1,12 +1,15 @@
-from patterns.creational_patterns import Engine, Logger
+from patterns.creational_patterns import Engine, Logger, MapperRegistry
 from patterns.structural_patterns import AppRoute, Debug
 from patterns.behavioral_patterns import EmailNotifier, SmsNotifier, ListView, CreateView, BaseSerializer
+from patterns.architectural_system_patterns import UnitOfWork
 from my_framework.templator import render
 
 site = Engine()
 logger = Logger('main')
 email_notifier = EmailNotifier()
 sms_notifier = SmsNotifier()
+UnitOfWork.new_current()
+UnitOfWork.get_current().set_mapper_registry(MapperRegistry)
 
 routes = {}
 
@@ -72,7 +75,7 @@ class CreateGood:
 
             if self.category_id != -1:
                 category = site.find_category_by_id(int(self.category_id))
-                good = site.create_good('car', name, category)
+                good = site.create_good('simple_good', name, category)
                 good.observers.append(email_notifier)
                 good.observers.append(sms_notifier)
                 site.goods.append(good)
@@ -146,8 +149,11 @@ class CategoryList:
 
 @AppRoute(routes=routes, url='/buyers-list/')
 class BuyerListView(ListView):
-    queryset = site.buyers
     template_name = 'buyers_list.html'
+
+    def get_queryset(self):
+        mapper = MapperRegistry.get_current_mapper('buyer')
+        return mapper.all()
 
 
 @AppRoute(routes=routes, url='/create-buyer/')
@@ -159,16 +165,18 @@ class BuyerCreateView(CreateView):
         name = site.decode_value(name)
         new_obj = site.create_user('buyer', name)
         site.buyers.append(new_obj)
+        new_obj.mark_new()
+        UnitOfWork.get_current().commit()
 
 
 @AppRoute(routes=routes, url='/add-buyer/')
-class AddSBuyerByGoodCreateView(CreateView):
+class AddBuyerByGoodCreateView(CreateView):
     template_name = 'add_buyer.html'
 
     def get_context_data(self):
         context = super().get_context_data()
-        context['courses'] = site.goods
-        context['students'] = site.buyers
+        context['goods'] = site.goods
+        context['buyers'] = site.buyers
         return context
 
     def create_obj(self, data: dict):
